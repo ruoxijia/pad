@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 from sklearn.neighbors.dist_metrics import DistanceMetric
 
-from statistics import UtilityOccupancyStatistics
+from data_statistics import UtilityOccupancyStatistics
 
 
 class K_ward:

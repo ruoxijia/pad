@@ -34,6 +34,10 @@ window = [17,21]
 sanitized_profile_baseline = util.sanitize_data(day_profile, distance_metric='euclidean',
                                                     anonymity_level=anonymity_level,rep_mode = rep_mode,
                                                     window=window)
+loss_generic_metric = pe.get_statistics_loss(data_gt=day_profile, data_sanitized=sanitized_profile_baseline,
+                                                         mode=interest,window=window)
+print("information loss with learned metric %s" % loss_generic_metric)
+
 df_subsampled_from = sanitized_profile_baseline.drop_duplicates().sample(frac=1)
 subsample_size_max = int(comb(len(df_subsampled_from),2))
 print('total number of pairs is %s' % subsample_size_max)
@@ -53,7 +57,7 @@ similarity_label, class_label = sim.label_via_silhouette_analysis(range_n_cluste
 # The lambda that achieves lowest testing error will be selected for generating the distance metric
 dist_metric = mel.learn_with_simialrity_label_regularization(data=data_pair,
                                                              label=similarity_label,
-                                                             lam_vec=[20],
+                                                             lam_vec=[10],
                                                              train_portion=0.8)
 
 # step 6: the original database is privatized using the learned metric

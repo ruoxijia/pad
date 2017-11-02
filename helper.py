@@ -3,7 +3,7 @@ import pandas as pd
 import scipy as sp
 
 from kward import K_ward
-from statistics import OccupancyStatistics
+from data_statistics import OccupancyStatistics
 
 
 class Utilities:

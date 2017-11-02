@@ -3,9 +3,9 @@ import numpy as np
 from helper import Utilities, PerformanceEvaluation
 import matplotlib.pyplot as plt
 import pickle
-from statistics import OccupancyStatistics
+from data_statistics import OccupancyStatistics
 
-day_profile = pd.read_pickle('dataframe_all_binary.pkl')
+day_profile = pd.read_pickle('../dataset/dataframe_all_binary.pkl')
 res = 15
 day_profile = day_profile.iloc[:,0::res]
 ncols = len(day_profile.columns)

@@ -24,17 +24,16 @@ def KNNPrediciton(data_trn,label_trn,data_tst,label_tst,n_neighbors):
     return pred_accuracy
 
 
-day_profile = pd.read_pickle('dataframe_all_binary.pkl')
+day_profile = pd.read_pickle('../dataset/dataframe_all_binary.pkl')
 res = 15
 day_profile = day_profile.iloc[:,0::res] # sample the time series data every res minutes
 ncols = len(day_profile.columns)
 rep_mode = 'mean'
 partial_occup_length = int(4 * 60/15) # length of occupancy data that is used as features to train knn
 util = Utilities()
-anonymity_level_vec = np.arange(20,21)
+anonymity_level_vec = np.arange(2,21)
 knn_vec = np.arange(1,10)
 cv_num = 5
-n_trn = round(len(day_profile) * 0.8)
 eval_time_steps = range(partial_occup_length,ncols)
 # occupancy prediction accuracy if original occupancy database is used for training
 accuracy_gt_vec = np.empty((len(knn_vec),len(eval_time_steps),cv_num))
@@ -90,7 +89,7 @@ for ai in range(len(anonymity_level_vec)):
                 accuracy_sn_vec[ai,ki,i,cvi] = accuracy_sn
                 cvi += 1
 
-        with open('../result/usecase_occup_knn_anonymitylevels(2-20)_cv.pickle', 'wb') as f:  # Python 3: open(..., 'wb')
+        with open('../result/usecase_occup_knn_anonymitylevels(2-20)_cv.pickle', 'wb') as f:
             pickle.dump(
                 [accuracy_gt_vec,accuracy_sn_vec,eval_time_steps,
                  anonymity_level_vec,day_profile,sanitized_profile_baseline_list,
@@ -99,7 +98,7 @@ for ai in range(len(anonymity_level_vec)):
 
 
 ######### visualization ###############
-with open('../result/usecase_occup_knn_anonymitylevels(2-20)_cv.pickle', 'rb') as f:  # Python 3: open(..., 'wb')
+with open('../result/usecase_occup_knn_anonymitylevels(2-20)_cv.pickle', 'rb') as f:
     accuracy_gt_vec, accuracy_sn_vec, eval_time_steps, anonymity_level_vec,\
     day_profile, sanitized_profile_baseline_list, knn_vec, cv_num\
         = pickle.load(f)

@@ -26,7 +26,7 @@ def SVMPrediciton(data_trn,label_trn,data_tst,label_tst):
     pred_accuracy = sum([1 for i in range(len(label_pred)) if label_pred[i] == label_tst[i]])/len(label_pred)
     return pred_accuracy
 
-day_profile = pd.read_pickle('dataframe_all_binary.pkl')
+day_profile = pd.read_pickle('../dataset/dataframe_all_binary.pkl')
 res = 15
 day_profile = day_profile.iloc[:,0::res]
 ncols = len(day_profile.columns)
@@ -57,7 +57,6 @@ for i in range(len(eval_time_steps)):
         accuracy_gt = SVMPrediciton(data_trn_gt, label_trn_gt, data_tst, label_tst)
         accuracy_gt_vec[i, cvi] = accuracy_gt
         cvi += 1
-    print("accuracy with original data %s" % accuracy_gt)
 
 
 for ai in range(len(anonymity_level_vec)):

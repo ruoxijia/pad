@@ -17,8 +17,7 @@ mel = MetricLearning()
 
 # step 1: get the database to be published
 day_profile = pd.read_pickle('../dataset/dataframe_all_binary.pkl')
-day_profile = day_profile.iloc[0::2,0::60]
-total_cols = len(day_profile.columns)
+day_profile = day_profile.iloc[0::4,0::60]
 rep_mode = 'mean'
 anonymity_level = 2 # desired anonymity level
 
@@ -31,12 +30,16 @@ window = [11,15] # window specifies the starting and ending time of the period t
 # step 3: pre-sanitize the database
 sanitized_profile_baseline = util.sanitize_data(day_profile, distance_metric='euclidean',
                                                 anonymity_level=anonymity_level,rep_mode = rep_mode)
+loss_generic_metric = pe.get_information_loss(data_gt=day_profile,
+                                              data_sanitized=sanitized_profile_baseline.round(),
+                                              window=window)
+print("information loss with generic metric %s" % loss_generic_metric)
 df_subsampled_from = sanitized_profile_baseline.drop_duplicates().sample(frac=1)
 subsample_size_max = int(comb(len(df_subsampled_from),2))
 print('total number of pairs is %s' % subsample_size_max)
 
 # step 4: sample a subset of pre-sanitized database and form the data points into pairs
-subsample_size = int(round(subsample_size_max/2))
+subsample_size = int(round(subsample_size_max))
 sp = Subsampling(data=df_subsampled_from)
 data_pair = sp.uniform_sampling(subsample_size=subsample_size)
 
@@ -50,7 +53,7 @@ similarity_label, class_label = sim.label_via_silhouette_analysis(range_n_cluste
 # The lambda that achieves lowest testing error will be selected for generating the distance metric
 dist_metric = mel.learn_with_simialrity_label_regularization(data=data_pair,
                                                              label=similarity_label,
-                                                             lam_vec=[1,10],
+                                                             lam_vec=[0,0.1,1,10],
                                                              train_portion=0.8)
 
 # step 6: the original database is privatized using the learned metric
