@@ -1,3 +1,5 @@
+import sys; import os
+sys.path.append(os.path.abspath("./"))
 from helper import Utilities, PerformanceEvaluation
 import pandas as pd
 from metric_learning import Subsampling, MetricLearning
@@ -41,7 +43,7 @@ print('total number of pairs is %s' % subsample_size_max)
 # step 4: sample a subset of pre-sanitized database and form the data points into pairs
 subsample_size = int(round(subsample_size_max))
 sp = Subsampling(data=df_subsampled_from)
-data_pair = sp.uniform_sampling(subsample_size=subsample_size)
+data_pair, _ = sp.uniform_sampling(subsample_size=subsample_size)
 
 # User receives the data pairs and label the similarity
 sim = Similarity(data=data_pair)

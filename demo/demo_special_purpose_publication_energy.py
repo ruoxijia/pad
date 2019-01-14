@@ -1,3 +1,5 @@
+import sys; import os
+sys.path.append(os.path.abspath("./"))
 from helper import Utilities, PerformanceEvaluation
 import pandas as pd
 import numpy as np
@@ -18,7 +20,7 @@ pe = PerformanceEvaluation()
 mel = MetricLearning()
 
 # step 1: get the database to be published
-day_profile = pd.read_pickle('../dataset/dataframe_all_energy.pkl')
+day_profile = pd.read_pickle('dataset/dataframe_all_energy.pkl')
 day_profile = day_profile.iloc[0:90,0::4] # subsample the database to improve the speed for demonstration purpose
 day_profile.index = range(len(day_profile.index))
 rep_mode = 'mean'
@@ -45,12 +47,12 @@ print('total number of pairs is %s' % subsample_size_max)
 # step 4: sample a subset of pre-sanitized database and form the data points into pairs
 subsample_size = int(round(subsample_size_max/2))
 sp = Subsampling(data=df_subsampled_from)
-data_pair = sp.uniform_sampling(subsample_size=subsample_size)
+data_pair,_ = sp.uniform_sampling(subsample_size=subsample_size)
 
 # User receives the data pairs and label the similarity
 sim = Similarity(data=data_pair)
 sim.extract_interested_attribute(interest='statistics', stat_type=interest,window=window)
-similarity_label, class_label = sim.label_via_silhouette_analysis(range_n_clusters=range(2,8))
+similarity_label, class_label, data_subsample = sim.label_via_silhouette_analysis(range_n_clusters=range(2,8))
 
 # step 5: PAD learns a distance metric that represents the interest of the user from the labeled data pairs
 # lam_vec is a set of candidate lambda's for weighting the l1-norm penalty in the metric learning optimization problem.

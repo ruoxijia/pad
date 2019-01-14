@@ -1,3 +1,5 @@
+import sys; import os
+sys.path.append(os.path.abspath("./"))
 import pickle
 import matplotlib.pyplot as plt
 import numpy as np
@@ -24,7 +26,7 @@ def KNNPrediciton(data_trn,label_trn,data_tst,label_tst,n_neighbors):
     return pred_accuracy
 
 
-day_profile = pd.read_pickle('../dataset/dataframe_all_binary.pkl')
+day_profile = pd.read_pickle('dataset/dataframe_all_binary.pkl')
 res = 15
 day_profile = day_profile.iloc[:,0::res] # sample the time series data every res minutes
 ncols = len(day_profile.columns)
@@ -42,7 +44,7 @@ accuracy_sn_vec = np.empty((len(anonymity_level_vec),len(knn_vec),len(eval_time_
 
 # load the sanitized database
 sanitized_profile_baseline_list = []
-with open('../result/occup_generic_sanitized(2-20).pickle', 'rb') as f:
+with open('result/occup_generic_sanitized(2-20).pickle', 'rb') as f:
     _,sanitized_profile_baseline_list = pickle.load(f)
 
 for ki in range(len(knn_vec)):
@@ -89,7 +91,7 @@ for ai in range(len(anonymity_level_vec)):
                 accuracy_sn_vec[ai,ki,i,cvi] = accuracy_sn
                 cvi += 1
 
-        with open('../result/usecase_occup_knn_anonymitylevels(2-20)_cv.pickle', 'wb') as f:
+        with open('result/usecase_occup_knn_anonymitylevels(2-20)_cv.pickle', 'wb') as f:
             pickle.dump(
                 [accuracy_gt_vec,accuracy_sn_vec,eval_time_steps,
                  anonymity_level_vec,day_profile,sanitized_profile_baseline_list,
@@ -98,7 +100,7 @@ for ai in range(len(anonymity_level_vec)):
 
 
 ######### visualization ###############
-with open('../result/usecase_occup_knn_anonymitylevels(2-20)_cv.pickle', 'rb') as f:
+with open('result/usecase_occup_knn_anonymitylevels(2-20)_cv.pickle', 'rb') as f:
     accuracy_gt_vec, accuracy_sn_vec, eval_time_steps, anonymity_level_vec,\
     day_profile, sanitized_profile_baseline_list, knn_vec, cv_num\
         = pickle.load(f)

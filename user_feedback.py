@@ -4,6 +4,7 @@ from sklearn.cluster import KMeans
 from sklearn.metrics import silhouette_score
 
 from data_statistics import OccupancyStatistics
+import pdb
 
 
 class Similarity:
@@ -50,8 +51,8 @@ class Similarity:
             clusterer = KMeans(n_clusters=n_clusters)
             cluster_labels_current = clusterer.fit_predict(self.data_interested)
             silhouette_avg_current = silhouette_score(self.data_interested,cluster_labels_current)
-            print("For n_clusters =", n_clusters,
-                  "The average silhouette_score is :", silhouette_avg_current)
+            # print("For n_clusters =", n_clusters,
+            #       "The average silhouette_score is :", silhouette_avg_current)
             cluster_labels.append(cluster_labels_current)
             silhouette_avg.append(silhouette_avg_current)
         best_n_clusters_index = np.where(silhouette_avg == max(silhouette_avg))[0]
@@ -62,4 +63,6 @@ class Similarity:
                 similarity_label.append(1)
             else:
                 similarity_label.append(0)
-        return similarity_label, best_cluster_label
+
+        return similarity_label, self.dataSubsample
+
